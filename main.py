@@ -21,12 +21,14 @@ starter_sass = [
   "ur nan"
 ]
 
+# fetches and returns a random GIF using the GIPHY API
 def get_gif():
   params = dict(key=os.getenv('GIFAPI'), tag='party')
   response = requests.get("http://api.giphy.com/v1/gifs/random", params=params)
   json_data = json.loads(response.text)
   return(json_data['data']['url'])
 
+# adds current message to 'sass' database if not already in there
 def update_sass(user_sass):
   if "sass" in db.keys():
     sass = db["sass"]
@@ -35,16 +37,19 @@ def update_sass(user_sass):
   else:
     db["sass"] = [user_sass]
 
+# deletes the 'sass' message at the specified index
 def delete_sass(index):
   sass = db["sass"]
   if len(sass) > index:
     del sass[index]
     db["sass"] = sass
 
+# just lets us know we're logged in and ready to go
 @client.event
 async def on_ready():
   print('We have logged in as {0.user}'.format(client))
 
+# reads messages from the current server and executes the corresponding function based on the contents of the message
 @client.event
 async def on_message(message):
   msg = message.content
